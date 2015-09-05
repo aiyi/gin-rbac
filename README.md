@@ -15,19 +15,23 @@ Allow an operation on a specific resource.
 Represents identity of a request to protected resources.
 
 ##### Role
-* Dynamic role: $everyone (for all users), $authenticated (authenticated users)
-* Static role: e.g. admin (a defined role for administrators), manager, etc.
+Dynamic role: $everyone (for all users), $authenticated (authenticated users).
+Static role: e.g. admin (a defined role for administrators), manager, etc.
 
 ##### User-Role / Role-Permission assignment
 Users is connected with roles and roles are connected with permission (operation-resource) tuples with a n-to-n mapping.
 
 ## Usage
-Install the package:
-
+Install the package
+```
    $ go get github.com/aiyi/gin-rbac
+```
 
-Import the package:
-
+Import the package
+```
    import github.com/aiyi/gin-rbac
+```
 
+Use the middleware
+Tbd
 
