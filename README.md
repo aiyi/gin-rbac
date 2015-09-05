@@ -1,10 +1,10 @@
 ## gin-rbac
-gin-rbac is a Role-based access control (RBAC) middleware for Gin framework to filter out unauthorized REST API access.
+gin-rbac is a role-based access control (RBAC) middleware for [Gin] framework to filter out unauthorized REST API access.
 
-## Concepts
+## Terms and concepts
 ##### Resource
-An API endpoint. (for example: /api/projects/:id)
-  
+Each resource is an API endpoint. (for example: /api/products/:id)
+
 ##### Operation
 GET/PUT/DELETE/POST
 
@@ -16,22 +16,55 @@ Represents identity of a request to protected resources.
 
 ##### Role
 Dynamic role: $everyone (for all users), $authenticated (authenticated users).
+
 Static role: e.g. admin (a defined role for administrators), manager, etc.
 
 ##### User-Role / Role-Permission assignment
 Users is connected with roles and roles are connected with permission (operation-resource) tuples with a n-to-n mapping.
 
-## Usage
-Install the package
-```
-   $ go get github.com/aiyi/gin-rbac
+##### Access control policy
+policy.json:
+```json
+{
+  "/api/products": {
+    "GET" : ["$authenticated"]
+  },
+
+  "/api/products/:id": {
+    "GET" : ["$authenticated"],
+    "PUT" : ["manager", "editor"],
+    "DELETE" : ["admin"]
+  }
+}
 ```
 
-Import the package
-```
-   import github.com/aiyi/gin-rbac
+## Usage
+Install the package
+```sh
+go get github.com/aiyi/gin-rbac
 ```
 
 Use the middleware
-Tbd
+```go
+import (
+    "github.com/gin-gonic/gin"
+    "github.com/aiyi/gin-rbac"
+)
 
+func main() {
+    g := gin.New()
+    g.Use(rbac.Middleware("policy.json", func(c *gin.Context) *rbac.Roles {
+        // write your custom code to return roles of current user
+    }))
+
+    g.GET("/api/products", func(c *gin.Context) {
+        // handle GET products
+    })
+
+    g.DELETE("/api/products/:id", func(c *gin.Context) {
+        // handle DELETE by product id
+    })
+}
+```
+
+[Gin]: http://gin-gonic.github.io/gin/
